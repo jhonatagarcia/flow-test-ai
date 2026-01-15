@@ -1,5 +1,2 @@
-module.exports = {
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
-  theme: { extend: {} },
-  plugins: [],
-};
+// tailwind removed: original config kept for reference
+module.exports = {};

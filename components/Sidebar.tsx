@@ -12,19 +12,14 @@ export default function Sidebar() {
   if (hideOn.includes(pathname)) return null
 
   return (
-    <aside className="w-64 h-screen bg-zinc-900 text-white p-4">
-      <h2 className="text-xl font-bold mb-6">FlowTest AI</h2>
-      <nav className="space-y-2">
+    <aside className="sidebar">
+      <h2>FlowTest AI</h2>
+      <nav className="nav">
         {routes.map((r) => {
           const isActive = pathname?.startsWith(r.path);
           return (
             <div key={r.path}>
-              <Link
-                href={r.path}
-                className={
-                  "block px-2 py-1 rounded " + (isActive ? "font-semibold bg-zinc-700" : "hover:bg-zinc-800")
-                }
-              >
+              <Link href={r.path} className={isActive ? "active" : ""}>
                 {r.label}
               </Link>
             </div>
