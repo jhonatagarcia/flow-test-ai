@@ -1,5 +1,6 @@
 {
   "name": "flowtest-ai",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,8 +16,10 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "25.0.2",
     "@types/react": "19.2.7",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.0.0"
   }
 }

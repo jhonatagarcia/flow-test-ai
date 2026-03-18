@@ -1,9 +1,9 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { TaskCard } from './taskCard';
 import { AddTaskForm } from './addTaskForm';
 import { Plus } from 'lucide-react';
-import type { Task, Column } from './page';
+import type { Column, Task } from '@/lib/types';
 
 interface BoardColumnProps {
   column: Column;
@@ -86,6 +86,9 @@ export function BoardColumn({
     }),
   }));
 
+  const dropRef = useRef<HTMLDivElement>(null);
+  drop(dropRef);
+
   const dropZoneStyle: CSSProperties = {
     ...styles.dropZone,
     backgroundColor: column.color,
@@ -118,7 +121,7 @@ export function BoardColumn({
         </button>
       </div>
 
-      <div ref={drop} style={dropZoneStyle}>
+      <div ref={dropRef} style={dropZoneStyle}>
         <div style={styles.taskList}>
           {tasks.map(task => (
             <TaskCard key={task.id} task={task} onDelete={onDeleteTask} />

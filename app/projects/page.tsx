@@ -4,65 +4,9 @@ import { useState, CSSProperties } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { BoardColumn } from "./boardColumn";
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  columnId: string;
-}
-
-export interface Column {
-  id: string;
-  title: string;
-  color: string;
-}
-
-const initialColumns: Column[] = [
-  { id: "todo", title: "To Do", color: "#f1f5f9" },
-  { id: "in-progress", title: "In Progress", color: "#eff6ff" },
-  { id: "review", title: "Review", color: "#fffbeb" },
-  { id: "done", title: "Done", color: "#f0fdf4" },
-];
-
-const initialTasks: Task[] = [
-  {
-    id: "1",
-    title: "Design new landing page",
-    description: "Create wireframes and mockups",
-    columnId: "todo",
-  },
-  {
-    id: "2",
-    title: "Update documentation",
-    description: "Add API reference guides",
-    columnId: "todo",
-  },
-  {
-    id: "3",
-    title: "Fix navigation bug",
-    description: "Mobile menu not closing properly",
-    columnId: "in-progress",
-  },
-  {
-    id: "4",
-    title: "Implement search feature",
-    description: "Add full-text search capability",
-    columnId: "in-progress",
-  },
-  {
-    id: "5",
-    title: "Code review PR #234",
-    description: "Review authentication changes",
-    columnId: "review",
-  },
-  {
-    id: "6",
-    title: "Set up CI/CD pipeline",
-    description: "Automated testing and deployment",
-    columnId: "done",
-  },
-];
+import { initialColumns, initialTasks } from "@/lib/mock-data";
+import { createTask, moveTaskToColumn, removeTask } from "@/lib/projects";
+import type { Column, Task } from "@/lib/types";
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -101,27 +45,17 @@ export default function ProjectsPage() {
   const [newTaskColumn, setNewTaskColumn] = useState<string>("");
 
   const moveTask = (taskId: string, toColumnId: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId ? { ...task, columnId: toColumnId } : task
-      )
-    );
+    setTasks((prevTasks) => moveTaskToColumn(prevTasks, taskId, toColumnId));
   };
 
   const addTask = (columnId: string, title: string, description: string) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      description,
-      columnId,
-    };
-    setTasks([...tasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, createTask(columnId, title, description)]);
     setIsAddingTask(false);
     setNewTaskColumn("");
   };
 
   const deleteTask = (taskId: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    setTasks((prevTasks) => removeTask(prevTasks, taskId));
   };
 
   const handleAddTaskClick = (columnId: string) => {

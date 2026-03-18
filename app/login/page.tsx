@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getSafeRedirectPath, persistUserSession } from "@/lib/auth";
 
@@ -8,13 +8,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email && password) {
       persistUserSession({ email });
-      const redirectParam = searchParams.get("redirect");
+      const redirectParam = new URLSearchParams(window.location.search).get("redirect");
       router.push(getSafeRedirectPath(redirectParam));
     } else {
       alert("Preencha email e senha (qualquer valor funciona no mock).");

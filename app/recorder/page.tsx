@@ -1,16 +1,11 @@
 "use client"
 import { useState } from "react"
-
-const SAMPLE_UI = [
-  { id: 'btn-login', label: 'Clicar em Entrar' },
-  { id: 'input-email', label: 'Preencher email' },
-  { id: 'input-pass', label: 'Preencher senha' },
-  { id: 'btn-submit', label: 'Submit' },
-]
+import { buildPlaywrightSnippet, createRecorderStep, SAMPLE_UI_ITEMS } from "@/lib/recorder"
+import type { RecorderStep, SampleUIItem } from "@/lib/types"
 
 export default function Recorder(){
   const [recording, setRecording] = useState(false)
-  const [steps, setSteps] = useState([])
+  const [steps, setSteps] = useState<RecorderStep[]>([])
 
   function toggle(){
     setRecording(!recording)
@@ -19,21 +14,13 @@ export default function Recorder(){
     }
   }
 
-  function addStep(item){
+  function addStep(item: SampleUIItem){
     if(!recording) return
-    const step = { ts: Date.now(), action: item.label, selector: `#${item.id}` }
-    setSteps(s => [...s, step])
+    setSteps((currentSteps) => [...currentSteps, createRecorderStep(item)])
   }
 
   function exportSnippet(){
-    const lines = [
-      "import { test, expect } from '@playwright/test';",
-      "",
-      "test('recorded flow', async ({ page }) => {",
-      ...steps.map(s => `  // ${new Date(s.ts).toLocaleTimeString()} — ${s.action}\n  await page.click('${s.selector}');`),
-      "});"
-    ]
-    const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' })
+    const blob = new Blob([buildPlaywrightSnippet(steps)], { type: 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -63,7 +50,7 @@ export default function Recorder(){
       <div className="card">
         <h3 style={{fontWeight:600,marginBottom:8}}>Simulated App (click targets)</h3>
         <div>
-          {SAMPLE_UI.map(item => (
+          {SAMPLE_UI_ITEMS.map(item => (
             <div key={item.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8,display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
               <div>
                 <div style={{fontWeight:600}}>{item.label}</div>

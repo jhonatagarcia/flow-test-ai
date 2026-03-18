@@ -1,2 +1,5 @@
-// postcss removed: kept for reference
-module.exports = {};
+module.exports = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};

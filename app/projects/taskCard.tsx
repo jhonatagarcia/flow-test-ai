@@ -1,7 +1,7 @@
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, useState, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { GripVertical, Trash2 } from 'lucide-react';
-import type { Task } from './page';
+import type { Task } from '@/lib/types';
 
 interface TaskCardProps {
   task: Task;
@@ -70,6 +70,9 @@ export function TaskCard({ task, onDelete }: TaskCardProps) {
     }),
   }));
 
+  const dragRef = useRef<HTMLDivElement>(null);
+  drag(dragRef);
+
   const cardStyle: CSSProperties = {
     ...styles.card,
     opacity: isDragging ? 0.5 : 1,
@@ -86,7 +89,7 @@ export function TaskCard({ task, onDelete }: TaskCardProps) {
 
   return (
     <div
-      ref={drag}
+      ref={dragRef}
       style={cardStyle}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
